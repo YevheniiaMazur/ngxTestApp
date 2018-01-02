@@ -4,13 +4,18 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular/cli'],
+    frameworks: ['benchmark', 'jasmine', '@angular/cli'],
+    files: getFilesConfig(),
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular/cli/plugins/karma')
+      require('@angular/cli/plugins/karma'),
+      require('karma-benchmark'),
+      require('karma-benchmark-reporter'),
+      require({'reporter:count': ['type', countReporter]}),
+      {'reporter:benchmark-json': ['type', benchmarkJSONReporter]}
     ],
     client:{
       clearContext: false // leave Jasmine Spec Runner output visible in browser
@@ -22,7 +27,7 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', 'benchmark'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -31,3 +36,9 @@ module.exports = function (config) {
     singleRun: false
   });
 };
+
+function getFilesConfig () {
+    return [
+      './src/app/**/benchmark.js'
+    ]
+}
